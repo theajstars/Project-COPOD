@@ -19,7 +19,6 @@ import {
 } from "antd";
 import { motion } from "framer-motion";
 //Import countries.json for users location entry
-// import * as countries from "../../../Assets/JSON/SelectCountries.json";
 import { countries } from "../../../Assets/JSON/JsonExports";
 
 import ModalBlur from "../../ModalBlur";
@@ -70,8 +69,9 @@ export default function TakeTest() {
   const [fever, setFever] = useState(false);
   const [feverValue, setFeverValue] = useState(37);
   const [soreThroat, setSoreThroat] = useState(false);
-  const [bodyPain, setBodyPain] = useState(false);
+  const [cough, setCough] = useState(false);
 
+  const [bodyPain, setBodyPain] = useState(false);
   const [bodyPainValue, setBodyPainValue] = useState(false);
   const [isBodyPainValueDisabled, setBodyPainValueDisabled] = useState(true);
 
@@ -106,6 +106,7 @@ export default function TakeTest() {
   const handleSubmitSucess = (e) => {
     setSubmitModalVisible(false);
     setTestModal(true);
+
     console.log("Submitted successfully!");
   };
   useEffect(() => {
@@ -165,6 +166,31 @@ export default function TakeTest() {
       setAge(1);
     }
   }, [age]);
+
+  //Transition modal text when modal is visible
+  useEffect(() => {
+    if (testModal) {
+      function changeProcessingText(index) {
+        setProcessingResultText(processingResultTexts[index]);
+      }
+
+      setTimeout(() => {
+        changeProcessingText(0);
+      }, 800);
+      setTimeout(() => {
+        changeProcessingText(1);
+      }, 1000);
+      setTimeout(() => {
+        changeProcessingText(2);
+      }, 1500);
+      setTimeout(() => {
+        changeProcessingText(3);
+      }, 3000);
+      setTimeout(() => {
+        changeProcessingText(4);
+      }, 3600);
+    }
+  }, [testModal]);
 
   return (
     <>
@@ -359,6 +385,23 @@ export default function TakeTest() {
                   size="default"
                   onChange={(e) => {
                     setSoreThroat(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Do you have a cough?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setCough(e);
                   }}
                 />
                 <span className="test-segment-answer-option cabin">Yes</span>
@@ -565,34 +608,8 @@ export default function TakeTest() {
           </motion.div>
         </div>
 
-        <button
-          onClick={() => {
-            setTestModal(!testModal);
-            console.log(testModal);
-          }}
-          style={{
-            zIndex: 999999,
-            position: "absolute",
-          }}
-        >
-          Show submit modal
-        </button>
-        <button
-          onClick={() => {
-            const index = processingResultTexts.indexOf(processingResultText);
-            setProcessingResultText(processingResultTexts[index + 1]);
-          }}
-          style={{
-            zIndex: 999999,
-            position: "absolute",
-            marginLeft: "200px",
-          }}
-        >
-          Change modal text
-        </button>
         {/* Modal background to show while processing test results */}
         <ModalBlur visible={testModal} />
-        {/* {testModal && ( */}
         <motion.div
           className="processing-results flex-row"
           initial={{
@@ -612,7 +629,6 @@ export default function TakeTest() {
             <i className="fas fa-spinner fa-spin"></i>
           </span>
         </motion.div>
-        {/* )} */}
       </Container>
     </>
   );
