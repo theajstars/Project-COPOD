@@ -19,7 +19,9 @@ import {
 } from "antd";
 import { motion } from "framer-motion";
 //Import countries.json for users location entry
-import * as countries from "../../../Assets/JSON/SelectCountries.json";
+// import * as countries from "../../../Assets/JSON/SelectCountries.json";
+import { countries } from "../../../Assets/JSON/JsonExports";
+
 import ModalBlur from "../../ModalBlur";
 
 // Function to send notification
@@ -59,7 +61,7 @@ function CancelTestButton() {
   );
 }
 export default function TakeTest() {
-  const [countriesArray, setCountriesArray] = useState(countries.countries);
+  const [countriesArray, setCountriesArray] = useState(countries);
   const [showingScreen, setShowingScreen] = useState(1);
   const [testModal, setTestModal] = useState(false);
   const [location, setLocation] = useState("");
