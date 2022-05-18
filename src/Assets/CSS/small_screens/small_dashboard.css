@@ -1,0 +1,11 @@
+@media screen and (max-width: 500px) {
+  div.test-history-container {
+    width: 150px;
+  }
+  span.test-history-value-container {
+    flex-direction: column !important;
+  }
+  span.test-history-remark {
+    margin-top: -10px;
+  }
+}

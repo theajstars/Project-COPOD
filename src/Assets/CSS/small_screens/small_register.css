@@ -1,0 +1,15 @@
+@media screen and (max-width: 750px) {
+  div.auth-form-container {
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .form-logo {
+    height: 120px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  div.auth-form {
+    width: 360px;
+  }
+}

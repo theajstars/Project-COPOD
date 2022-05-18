@@ -1,0 +1,66 @@
+@media screen and (max-width: 850px) {
+  div.copod-about {
+    flex-direction: column;
+  }
+  hr.copod-about-hr {
+    display: none;
+  }
+}
+@media screen and (max-width: 750px) {
+  div.flow-diagram img {
+    width: 90%;
+  }
+  div.copod-property {
+    height: 180px;
+    width: 180px;
+  }
+  div.copod-property-top {
+    font-size: 30px;
+  }
+  div.copod-property-bottom {
+    font-size: 15px;
+  }
+  div.copod-property-top img {
+    width: 130px;
+    height: 35px;
+  }
+}
+@media screen and (max-width: 680px) {
+  div.home-jumbo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #globe {
+    margin-top: 40px;
+  }
+  div.copod-properties {
+    flex-direction: column;
+    align-items: center;
+  }
+  div.copod-property {
+    height: 200px;
+    width: 200px;
+    margin: 10px 0px;
+  }
+  div.copod-property-top {
+    font-size: 42px;
+  }
+  div.copod-property-bottom {
+    font-size: 17px;
+  }
+  div.copod-property-top img {
+    width: 140px;
+    height: 45px;
+  }
+  div.contact-developer-container {
+    flex-direction: column;
+  }
+  div.contact-developer-form {
+    width: 65%;
+  }
+}
+@media screen and (max-width: 480px) {
+  div.contact-developer-form {
+    width: 85%;
+  }
+}

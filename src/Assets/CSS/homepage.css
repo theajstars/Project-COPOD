@@ -1,0 +1,143 @@
+.home-jumbo {
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 0px;
+}
+.home-jumbo-text {
+  text-transform: uppercase;
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 45px;
+}
+.get-tested-now-btn {
+  border: 1px solid var(--darker-blue);
+  font-size: 17px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 250px;
+  cursor: pointer;
+  height: 45px;
+  margin-top: 40px;
+  transition-duration: 0.12s;
+}
+.get-tested-now-btn:hover {
+  background: var(--darker-blue);
+  color: var(--white);
+}
+.flow-diagram {
+  text-align: center;
+  padding: 60px 0px;
+}
+.home-header {
+  font-weight: 400;
+  font-size: 27px;
+  color: #0f2a70;
+}
+.copod-properties {
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 60px 0px;
+}
+.copod-property {
+  box-shadow: 0px 0px 4px rgba(41, 71, 148, 0.37);
+  height: 200px;
+  width: 200px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.copod-property-top {
+  font-weight: 600;
+  font-size: 42px;
+}
+.copod-property-bottom {
+  font-weight: 400;
+  font-size: 17px;
+}
+.copod-about {
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.copod-about img {
+  transform: scale(0.9);
+}
+.copod-about-hr {
+  border: 1px solid var(--gray);
+  height: 200px;
+}
+.copod-about-right {
+  width: 55%;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+.copod-about-text {
+  font-size: 18px;
+  width: 100%;
+  line-height: 30px;
+}
+.testimonial-section {
+  padding: 90px 0px;
+  overflow: hidden !important;
+}
+.testimonials {
+  justify-content: space-between;
+}
+.testimonial {
+  align-items: center;
+  justify-content: space-around;
+  width: 250px;
+  padding: 20px;
+  height: 450px;
+  border: 1px solid rgba(15, 42, 112, 0.6);
+  box-sizing: border-box;
+  box-shadow: 0px 4px 14px -7px rgba(41, 71, 148, 0.37);
+  border-radius: 14px;
+}
+.testimonial img {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+}
+.testifier {
+  font-size: 18px;
+}
+.testimonial hr {
+  border: 1px solid #0f2a70;
+  background: var(--darker-blue);
+  width: 80px;
+}
+.testimony {
+  font-weight: 400;
+  width: 200px;
+  font-size: 17px;
+  line-height: 30px;
+  text-align: center;
+
+  color: #000000;
+}
+.contact-developer-section {
+  background: url("../IMG/contact-bg-2.svg");
+  height: 500px;
+  /* width: 80%; */
+}
+.contact-developer-container {
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+.contact-developer-container img {
+  border-radius: 50%;
+  transform: scale(0.79);
+}
+.contact-developer-form {
+  width: 40%;
+  height: 450px;
+  justify-content: space-around;
+}
+.contact-message {
+  height: 180px;
+  padding: 20px;
+  resize: none;
+}

@@ -1,0 +1,86 @@
+.dashboard-container {
+  margin-top: 120px;
+  align-items: center;
+}
+.take-test-button {
+  outline: none;
+  border-radius: 10px;
+  font-size: 17px;
+  width: 340px;
+  border: 2px solid var(--dark-blue);
+  cursor: pointer;
+  transition-duration: 0.12s;
+  color: var(--white);
+  text-align: center;
+}
+.take-test-button:hover {
+  background-color: var(--light-blue);
+  border-color: var(--light-blue);
+  color: var(--white);
+}
+.take-test-button:active {
+  background: var(--white);
+  color: var(--dark-blue);
+  font-weight: 600;
+}
+.dash-rule {
+  /* background-color: rgba(0, 0, 0, 0.12); */
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  outline: none;
+  margin: 50px 0px;
+  width: 100%;
+}
+.my-tests-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* Test History  */
+.test-history-container {
+  border: 1.5px solid;
+  border-left: 20px solid;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 12px;
+  width: 200px;
+  height: 150px;
+  justify-content: space-between;
+}
+
+.test-history-positive-container {
+  border-color: var(--light-green);
+}
+.test-history-negative-container {
+  border-color: var(--red);
+}
+
+.test-history-date-container {
+  align-items: flex-start;
+}
+.test-history-day {
+  font-size: 19px;
+}
+.test-history-date {
+  font-size: 15px;
+  margin-top: -5px;
+}
+.test-history-value-container {
+  align-items: flex-start;
+}
+
+.test-history-value {
+  font-size: 24px;
+  font-weight: 800;
+}
+.test-history-remark {
+  font-size: 15px;
+  font-weight: 600;
+}
+.test-history-positive-remark {
+  color: var(--dark-green);
+}
+.view-test-history {
+  font-size: 16px;
+}

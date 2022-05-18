@@ -1,0 +1,144 @@
+.test-container {
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.test-segment-container {
+  width: 546px;
+  max-width: 98%;
+  height: 450px;
+  padding: 20px;
+  border: 1px solid rgba(41, 71, 148, 0.1);
+  box-sizing: border-box;
+  box-shadow: 0px 45px 45px -21px rgba(41, 71, 148, 0.26);
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  contain: content;
+}
+.cancel-test {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  color: #cb1818;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
+.cancel-test:hover,
+.cancel-test:active {
+  color: #811010;
+  background-color: #ce010169;
+}
+.test-segment-question {
+  line-height: 10px;
+  width: 100%;
+  align-items: center;
+}
+.test-segment-question-text {
+  font-family: "Cabin", sans-serif;
+  color: var(--darker-blue);
+  font-weight: 500;
+  font-size: 16px;
+
+  text-align: center;
+}
+.country-select-image {
+  height: 22px;
+  margin-right: 4px;
+}
+.test-segment-answer-options {
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+}
+.test-segment-answer-option {
+  width: 84px !important;
+  text-align: center;
+  font-size: 18px;
+}
+.test-segment-actions {
+  align-items: center;
+  justify-content: space-between;
+  width: 75%;
+}
+.test-segment-action {
+  background: var(--white);
+  border: 1px solid var(--darker-blue);
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 120px;
+  color: var(--darker-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  cursor: pointer;
+  transition-duration: 0.08s;
+  outline: none;
+}
+.test-segment-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.test-segment-action:enabled:hover {
+  background-color: rgba(15, 42, 112, 0.1);
+  border-color: rgba(15, 42, 112, 0.06);
+}
+.input-test-age {
+  align-items: center;
+  justify-content: space-between;
+  width: 35%;
+}
+.input-test-age span {
+  /* Plus and Minus icons for modifying age */
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+.test-age-value {
+  width: 80px;
+  height: 40px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  text-align: center;
+  font-size: 20px;
+  outline: none;
+}
+.test-age-value:focus {
+  border-color: rgba(15, 42, 112, 0.06);
+}
+.slider-container {
+  width: 70%;
+}
+.processing-results {
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -150px;
+  margin-left: -150px;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  color: var(--darker-blue);
+}
+.processing-text {
+  font-size: 19px;
+  margin-right: 7px;
+}
+.processing-icon {
+  font-size: 20px;
+  margin-left: 7px;
+}

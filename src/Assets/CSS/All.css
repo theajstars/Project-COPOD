@@ -1,0 +1,35 @@
+@import url("./fonts.css");
+@import url("./colors.css");
+@import url("./auth.css");
+@import url("./homepage.css");
+@import url("./dashboard.css");
+@import url("./side-nav.css");
+@import url("./take-test.css");
+@import url("./modal-blur.css");
+@import url("./small_screens/small_register.css");
+@import url("./small_screens/small_home.css");
+@import url("./small_screens/small_dashboard.css");
+#root {
+  height: 100%;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+a {
+  text-decoration: none !important;
+}
+.copyright {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Make elements partly opaque when they are disabled */
+.opaque {
+  opacity: 0.6;
+}
