@@ -1,6 +1,6 @@
-import Model from "./Neural_Network_Models/Top_Half/model.json";
+import Model from "./Top_Half/model.json";
 import React, { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+import ml5 from "ml5";
 import { Navigate } from "react-router-dom";
 import { Container } from "@mui/material";
 import {
@@ -95,7 +95,7 @@ export default function TakeTest() {
   const [processingResultText, setProcessingResultText] = useState(
     processingResultTexts[0]
   );
-
+  const [testResults, setTestResults] = useState([]);
   const showSubmitModal = () => {
     setSubmitModalVisible(true);
   };
@@ -109,10 +109,33 @@ export default function TakeTest() {
 
     console.log("Submitted successfully!");
   };
-  useEffect(() => {
-    console.log("Body Pain: ", countries);
-    console.log("Body Pain: ", bodyPain);
-  }, [bodyPain]);
+  const getUserResult = () => {
+    const neuralOptions = {
+      task: "classification",
+      debug: true,
+    };
+    const nn = ml5.neuralNetwork(neuralOptions);
+    nn.load("/Top_Half/model.json", () => {
+      const input = {
+        cough: cough ? 1 : 0,
+        fever: fever ? 1 : 0,
+        sore_throat: soreThroat ? 1 : 0,
+        shortness_of_breath: breathingDiff ? 1 : 0,
+        head_ache: headAche ? 1 : 0,
+        age_60_and_above: age >= 60 ? 1 : 0,
+        gender: gender,
+      };
+
+      nn.classify(input, (error, testResult) => {
+        if (error) {
+          console.error("An error occurred: ", error);
+        } else {
+          console.log(testResult);
+          setTestResults(testResult);
+        }
+      });
+    });
+  };
   const PainScaleMarks = {
     1: 1,
     50: 2,
@@ -166,10 +189,14 @@ export default function TakeTest() {
       setAge(1);
     }
   }, [age]);
+  useEffect(() => {
+    console.log(testResults);
+  }, [testResults]);
 
   //Transition modal text when modal is visible
   useEffect(() => {
     if (testModal) {
+      getUserResult();
       function changeProcessingText(index) {
         setProcessingResultText(processingResultTexts[index]);
       }
@@ -268,8 +295,8 @@ export default function TakeTest() {
               <br />
               <br />
               <Radio.Group onChange={changeGender} value={gender}>
-                <Radio.Button value={1}>Male</Radio.Button>
-                <Radio.Button value={2}>Female</Radio.Button>
+                <Radio.Button value={0}>Male</Radio.Button>
+                <Radio.Button value={1}>Female</Radio.Button>
               </Radio.Group>
             </div>
 
