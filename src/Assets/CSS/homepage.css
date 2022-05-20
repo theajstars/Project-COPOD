@@ -10,6 +10,9 @@
   line-height: 45px;
 }
 .get-tested-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--darker-blue);
   font-size: 17px;
   box-sizing: border-box;

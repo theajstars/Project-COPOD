@@ -22,6 +22,7 @@ import { motion } from "framer-motion";
 import { countries } from "../../../Assets/JSON/JsonExports";
 
 import ModalBlur from "../../ModalBlur";
+import NewTestResults from "./NewTestResults";
 
 // Function to send notification
 const openNotificationWithIcon = (type, title, description) => {
@@ -657,6 +658,8 @@ export default function TakeTest() {
           </span>
         </motion.div>
       </Container>
+
+      <NewTestResults />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import * as THREE from "three";
 import { Container } from "@mui/material";
 import "./Assets/CSS/All.css";
@@ -81,9 +82,12 @@ export default function App() {
               <span className="home-jumbo-text cabin">
                 COVID-19 Is Rampaging The World <br /> at an Alarming Rate
               </span>
-              <button className="get-tested-now-btn text-darker-blue cabin bg-white">
+              <Link
+                to="/new"
+                className="get-tested-now-btn text-darker-blue cabin bg-white"
+              >
                 Get Tested now
-              </button>
+              </Link>
             </div>
             <div id="globe" ref={globeRef}></div>
           </div>
@@ -136,9 +140,12 @@ export default function App() {
                   95% success rate at predicting if a user is positive with
                   COVID 19 by collecting only minimal data
                 </div>
-                <button className="get-tested-now-btn text-darker-blue cabin bg-white">
+                <Link
+                  to="/new"
+                  className="get-tested-now-btn text-darker-blue cabin bg-white"
+                >
                   Get Tested now
-                </button>
+                </Link>
               </div>
             </div>
 
