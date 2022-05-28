@@ -65,3 +65,25 @@
   border-color: var(--red);
   color: var(--red);
 }
+.confirm-result-head {
+  align-items: center;
+  justify-content: center;
+}
+.confirm-result-head p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 !important;
+}
+.confirm-result-icon {
+  font-size: 15px;
+  border: 1px solid var(--darker-blue);
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transform: scale(0.5);
+  margin-top: -10px;
+  margin-left: -2px;
+  cursor: pointer;
+}

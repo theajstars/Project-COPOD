@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Container } from "@mui/material";
 import { PieChart, Pie, Cell } from "recharts";
 
-import { Select } from "antd";
+import { Select, Radio } from "antd";
 
 export default function NewTestResults() {
-  const { Option } = Select;
   const [verdictValue, setVerdictValue] = useState("Negative");
+  const [userVerdict, setUserVerdict] = useState("negative");
   const data = [
     { name: "Group A", value: 400 },
     { name: "Group B", value: 300 },
@@ -15,6 +15,9 @@ export default function NewTestResults() {
 
   const changeTestResult = (e) => {
     console.log(e);
+  };
+  const handleUserVerdictChange = (e) => {
+    setUserVerdict(e.target.value);
   };
   return (
     <div className="new-test-results-container">
@@ -62,15 +65,18 @@ export default function NewTestResults() {
                 {verdictValue}
               </span>
             </div>
-
-            <Select
-              defaultValue="negative"
-              style={{ width: 120 }}
-              onChange={changeTestResult}
-            >
-              <Option value="negative">Negative</Option>
-              <Option value="positive">Positive</Option>
-            </Select>
+            <br />
+            <div className="confirm-result-head flex-row">
+              <p className="cabin">Confirm test result</p>
+              <span className="confirm-result-icon flex-row">
+                <i className="fas fa-info"></i>
+              </span>
+            </div>
+            <br />
+            <Radio.Group onChange={handleUserVerdictChange} value={userVerdict}>
+              <Radio value={"negative"}>Negative</Radio>
+              <Radio value={"positive"}>Positive</Radio>
+            </Radio.Group>
           </div>
         </center>
       </Container>
