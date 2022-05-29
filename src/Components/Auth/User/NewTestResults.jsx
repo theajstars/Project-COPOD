@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-import { Select, Radio } from "antd";
+import { Radio, message } from "antd";
 
-export default function NewTestResults() {
+export default function NewTestResults({ result }) {
   const [verdictValue, setVerdictValue] = useState("Negative");
   const [userVerdict, setUserVerdict] = useState("negative");
+  const [covidResult, setCovidResult] = useState([]);
   const data = [
     { name: "Group A", value: 400 },
     { name: "Group B", value: 300 },
@@ -19,6 +20,42 @@ export default function NewTestResults() {
   const handleUserVerdictChange = (e) => {
     setUserVerdict(e.target.value);
   };
+
+  const showVerdictInformation = () => {
+    message.info(
+      "This is the result of an actual test carried out in a medical center or a PCR kit"
+    );
+  };
+  useEffect(() => {
+    console.log("COvid Res", covidResult);
+  }, [covidResult]);
+  useEffect(() => {
+    const tempResult = [];
+    result.map((res) => {
+      if (result.label !== "other") {
+        if (result.label !== "positive") {
+          // Positive test result so red color
+          var confidence = parseFloat((res.confidence * 100).toFixed(2));
+          var obj = {
+            label: res.label,
+            confidence: confidence,
+            color: "#F15757",
+          };
+          tempResult.push(obj);
+        } else {
+          //Negative test result so green color
+          var confidence = parseFloat((res.confidence * 100).toFixed(2));
+          var obj = {
+            label: res.label,
+            confidence: confidence,
+            color: "#89E3A8",
+          };
+          tempResult.push(obj);
+        }
+      }
+    });
+    setCovidResult(tempResult);
+  }, []);
   return (
     <div className="new-test-results-container">
       <Container maxWidth="lg">
@@ -29,22 +66,24 @@ export default function NewTestResults() {
           <div className="test-result-box">
             <PieChart width={300} height={300}>
               <Pie
-                data={data}
-                innerRadius={90}
-                outerRadius={150}
+                data={covidResult}
+                innerRadius={55}
+                outerRadius={90}
                 fill="#8884d8"
                 paddingAngle={0}
-                dataKey="value"
+                dataKey="confidence"
                 label
+                color="#000000"
               >
-                {data.map((entry, index) => (
+                {/* {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
-                ))}
+                ))} */}
               </Pie>
             </PieChart>
+
             <div className="flex-row pie-key-row">
               <span className="pie-key flex-row">
                 <span className="key-color key-color-positive"></span>
@@ -53,6 +92,10 @@ export default function NewTestResults() {
               <span className="pie-key flex-row">
                 <span className="key-color key-color-negative"></span>
                 <span className="key-text cabin">Negative test</span>
+              </span>
+              <span className="pie-key flex-row">
+                <span className="key-color key-color-negative"></span>
+                <span className="key-text cabin">Other</span>
               </span>
             </div>
             <div className="flex-row verdict-row cabin">
@@ -66,17 +109,27 @@ export default function NewTestResults() {
               </span>
             </div>
             <br />
+
             <div className="confirm-result-head flex-row">
               <p className="cabin">Confirm test result</p>
-              <span className="confirm-result-icon flex-row">
+              <span
+                className="confirm-result-icon flex-row"
+                onClick={showVerdictInformation}
+              >
                 <i className="fas fa-info"></i>
               </span>
             </div>
-            <br />
+            {/* <br /> */}
             <Radio.Group onChange={handleUserVerdictChange} value={userVerdict}>
               <Radio value={"negative"}>Negative</Radio>
               <Radio value={"positive"}>Positive</Radio>
             </Radio.Group>
+            <div className="flex-row test-btn-row">
+              <button className="test-segment-action cabin">Save test</button>
+              <button className="test-segment-action cabin delete-test-btn">
+                Delete test
+              </button>
+            </div>
           </div>
         </center>
       </Container>

@@ -2,7 +2,7 @@
   position: fixed;
   height: 100vh;
   width: 100vw;
-  z-index: 99999;
+  z-index: 0;
   background-color: var(--white);
   top: 0;
   align-items: center;
@@ -86,4 +86,20 @@
   margin-top: -10px;
   margin-left: -2px;
   cursor: pointer;
+}
+.test-btn-row {
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  margin-top: 30px;
+}
+.delete-test-btn {
+  background: var(--alt-red) !important;
+  color: var(--white);
+  border-color: var(--alt-red) !important;
+  transition: 0.12s;
+}
+.delete-test-btn:hover {
+  background-color: var(--red);
+  opacity: 0.8;
 }

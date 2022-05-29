@@ -137,6 +137,8 @@ export default function TakeTest() {
       });
     });
   };
+
+  const [showResults, setShowResults] = useState(false);
   const PainScaleMarks = {
     1: 1,
     50: 2,
@@ -216,6 +218,8 @@ export default function TakeTest() {
       }, 3000);
       setTimeout(() => {
         changeProcessingText(4);
+        setShowResults(true);
+        setTestModal(false);
       }, 3600);
     }
   }, [testModal]);
@@ -658,8 +662,7 @@ export default function TakeTest() {
           </span>
         </motion.div>
       </Container>
-
-      <NewTestResults />
+      {showResults && <NewTestResults result={testResults} />}
     </>
   );
 }
