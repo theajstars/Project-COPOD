@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-
+import axios from "axios";
+import Cookies from "js-cookie";
 import { Radio, message } from "antd";
+import { baseURL } from "../../../App";
 
-export default function NewTestResults({ result }) {
+export default function NewTestResults({ result, testObject }) {
+  const token = Cookies.get("ud");
   const [verdictValue, setVerdictValue] = useState("Negative");
   const [userVerdict, setUserVerdict] = useState("negative");
   const [covidResult, setCovidResult] = useState([]);
@@ -24,12 +27,24 @@ export default function NewTestResults({ result }) {
 
   const showVerdictInformation = () => {
     message.info(
-      "This is the result of an actual test carried out in a medical center or a PCR kit"
+      "This is the result of an actual test carried out in a medical center or with a PCR kit",
+      10
     );
   };
   useEffect(() => {
-    console.log("COvid Res", covidResult);
+    if (covidResult.length > 0) {
+      console.log("COvid Res", covidResult);
+      if (covidResult[0].confidence > covidResult[1].confidence) {
+        setVerdictValue(covidResult[0].label);
+      } else {
+        setVerdictValue(covidResult[1].label);
+      }
+    }
   }, [covidResult]);
+
+  useEffect(() => {
+    console.log("User test object: ", testObject);
+  }, [testObject]);
   useEffect(() => {
     const tempResult = [];
     result.map((res) => {
@@ -60,6 +75,22 @@ export default function NewTestResults({ result }) {
   useEffect(() => {
     console.log(colors);
   }, [colors]);
+
+  const saveNewTest = () => {
+    axios
+      .post(
+        `${baseURL}/test/new`,
+        { some: "Some data" },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
   return (
     <div className="new-test-results-container">
       <Container maxWidth="lg">
@@ -96,16 +127,14 @@ export default function NewTestResults({ result }) {
                 <span className="key-color key-color-negative"></span>
                 <span className="key-text cabin">Negative test</span>
               </span>
-              <span className="pie-key flex-row">
-                <span className="key-color key-color-negative"></span>
-                <span className="key-text cabin">Other</span>
-              </span>
             </div>
             <div className="flex-row verdict-row cabin">
               <span className="cabin verdict-text">Verdict: </span>
               <span
                 className={`cabin verdict-value ${
-                  verdictValue ? "negative-verdict" : "positive-verdict"
+                  verdictValue === "negative"
+                    ? "negative-verdict"
+                    : "positive-verdict"
                 }`}
               >
                 {verdictValue}
@@ -128,7 +157,12 @@ export default function NewTestResults({ result }) {
               <Radio value={"positive"}>Positive</Radio>
             </Radio.Group>
             <div className="flex-row test-btn-row">
-              <button className="test-segment-action cabin">Save test</button>
+              <button
+                className="test-segment-action cabin"
+                onClick={saveNewTest}
+              >
+                Save test
+              </button>
               <button className="test-segment-action cabin delete-test-btn">
                 Delete test
               </button>

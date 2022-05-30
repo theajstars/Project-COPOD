@@ -1,8 +1,8 @@
-import Model from "./Top_Half/model.json";
 import React, { useState, useEffect } from "react";
 import ml5 from "ml5";
 import { Navigate } from "react-router-dom";
 import { Container } from "@mui/material";
+import Cookies from "js-cookie";
 import {
   Select,
   Radio,
@@ -38,6 +38,7 @@ function CancelTestButton() {
   const testClosed = () => {
     message.success("Test cancelled!");
   };
+
   return (
     <>
       {testCancelled && <Navigate to="/dashboard" />}
@@ -61,6 +62,14 @@ function CancelTestButton() {
   );
 }
 export default function TakeTest() {
+  const token = Cookies.get("ud");
+  const [logout, setLogout] = useState(false);
+  //Check if user is signed in
+  useEffect(() => {
+    if (!token) {
+      setLogout(true);
+    }
+  }, []);
   const [countriesArray, setCountriesArray] = useState(countries);
   const [showingScreen, setShowingScreen] = useState(1);
   const [testModal, setTestModal] = useState(false);
@@ -83,6 +92,8 @@ export default function TakeTest() {
   const [breathingDiffValue, setBreathingDiffValue] = useState(false);
   const [isBreathingDiffValueDisabled, setBreathingDiffValueDisabled] =
     useState(true);
+
+  const [testObject, setTestObject] = useState({});
 
   const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
 
@@ -127,6 +138,7 @@ export default function TakeTest() {
         gender: gender,
       };
 
+      setTestObject(input);
       nn.classify(input, (error, testResult) => {
         if (error) {
           console.error("An error occurred: ", error);
@@ -183,9 +195,7 @@ export default function TakeTest() {
   const checkAgeIsNumber = (e) => {
     handleChange(e.target.value);
   };
-  const cancelTest = () => {
-    //Close the test if user clicks the X on test modal
-  };
+
   // Check if age is an empty string when the value changes
   useEffect(() => {
     if (age === "") {
@@ -226,6 +236,8 @@ export default function TakeTest() {
 
   return (
     <>
+      {logout && <Navigate to="/auth" />}
+
       <Container maxWidth="md">
         <div className="test-container flex-row">
           <motion.div
@@ -358,53 +370,7 @@ export default function TakeTest() {
                 <span className="test-segment-answer-option cabin">Yes</span>
               </div>
             </div>
-            <div className="test-segment-question flex-column">
-              <span className="test-segment-question-text">
-                Can you provide your temperature?
-              </span>
-              <br />
-              <br />
-              <div className="slider-container">
-                <div
-                  className="flex-row"
-                  style={{
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Row
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Col span={12}>
-                      <Slider
-                        min={30}
-                        max={44}
-                        value={typeof feverValue === "number" ? feverValue : 0}
-                        onChange={(e) => {
-                          setFeverValue(e);
-                        }}
-                      />
-                    </Col>
-                    <Col span={4}>
-                      <InputNumber
-                        min={30}
-                        max={44}
-                        style={{ margin: "0 16px" }}
-                        value={feverValue}
-                        onChange={(e) => {
-                          setFeverValue(e);
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </div>
+
             <div className="test-segment-question flex-column">
               <span className="test-segment-question-text">
                 Do you have a sore throat?
@@ -662,7 +628,9 @@ export default function TakeTest() {
           </span>
         </motion.div>
       </Container>
-      {showResults && <NewTestResults result={testResults} />}
+      {showResults && (
+        <NewTestResults result={testResults} testObject={testObject} />
+      )}
     </>
   );
 }

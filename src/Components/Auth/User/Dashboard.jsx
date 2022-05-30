@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Grid } from "@mui/material";
 import SideNav from "./SideNav";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Dashboard() {
   const [testHistory, setTestHistory] = useState([123231, 231321]);
-
+  const token = Cookies.get("ud");
+  const [logout, setLogout] = useState(false);
+  //Check if user is signed in
+  useEffect(() => {
+    if (!token) {
+      // setLogout(true);
+    }
+  }, []);
   return (
     <Container maxWidth="lg">
+      {logout && <Navigate to="/auth" />}
+
       <SideNav />
       <Container maxWidth="lg">
         <div className="dashboard-container flex-column">
@@ -22,6 +32,7 @@ export default function Dashboard() {
           <span className="my-tests-head text-darker-blue">
             Your recent tests
           </span>
+          <br />
           {testHistory.length === 0 ? (
             <span
               className="text-darker-blue source-sans"
@@ -32,7 +43,7 @@ export default function Dashboard() {
           ) : (
             <Grid
               container
-              spacing={4}
+              spacing={5}
               alignItems="center"
               justifyContent="center"
               alignContent="center"

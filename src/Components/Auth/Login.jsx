@@ -1,6 +1,10 @@
+import axios from "axios";
+import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 
 import { useToasts } from "react-toast-notifications";
+import { baseURL } from "../../App";
+import { validateEmail } from "./Auth";
 
 export default function Login({ switchComponent }) {
   useEffect(() => {
@@ -12,12 +16,42 @@ export default function Login({ switchComponent }) {
   const { addToast, removeAllToasts } = useToasts();
   const loginUser = () => {
     removeAllToasts();
-    var isError = false;
 
     // Validate Email and Name
+    const emailTrue = validateEmail(email);
+    if (!emailTrue) {
+      //Error in email address
 
-    if (!isError) {
+      addToast("Please enter a valid email", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+    if (password.length < 8) {
+      addToast("Please enter your password", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+    if (emailTrue && password.length >= 8) {
       //If no error send form to database
+      const loginData = {
+        email,
+        password,
+      };
+
+      axios
+        .post(`${baseURL}/user/login`, loginData)
+        .then((response) => {
+          console.clear();
+          console.log(response);
+          if (response.data.auth) {
+            Cookies.set("ud", response.data.token);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       console.log("No errors found");
       setSubmittingForm(true);
     }
