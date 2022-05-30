@@ -8,11 +8,12 @@ export default function NewTestResults({ result }) {
   const [verdictValue, setVerdictValue] = useState("Negative");
   const [userVerdict, setUserVerdict] = useState("negative");
   const [covidResult, setCovidResult] = useState([]);
+  const [colors, setColors] = useState([]);
   const data = [
     { name: "Group A", value: 400 },
     { name: "Group B", value: 300 },
   ];
-  const COLORS = ["#89E3A8", "#F15757"];
+  // const COLORS = ["#89E3A8", "#F15757"];
 
   const changeTestResult = (e) => {
     console.log(e);
@@ -32,30 +33,33 @@ export default function NewTestResults({ result }) {
   useEffect(() => {
     const tempResult = [];
     result.map((res) => {
-      if (result.label !== "other") {
-        if (result.label !== "positive") {
-          // Positive test result so red color
-          var confidence = parseFloat((res.confidence * 100).toFixed(2));
-          var obj = {
-            label: res.label,
-            confidence: confidence,
-            color: "#F15757",
-          };
-          tempResult.push(obj);
-        } else {
-          //Negative test result so green color
-          var confidence = parseFloat((res.confidence * 100).toFixed(2));
-          var obj = {
-            label: res.label,
-            confidence: confidence,
-            color: "#89E3A8",
-          };
-          tempResult.push(obj);
-        }
+      if (res.label === "positive") {
+        // Positive test result so red color
+        var confidence = parseFloat((res.confidence * 100).toFixed(2));
+        var obj = {
+          label: res.label,
+          confidence: confidence,
+          color: "#F15757",
+        };
+        setColors((previousColors) => [...previousColors, "#F15757"]);
+        tempResult.push(obj);
+      } else if (res.label === "negative") {
+        //Negative test result so green color
+        var confidence = parseFloat((res.confidence * 100).toFixed(2));
+        var obj = {
+          label: res.label,
+          confidence: confidence,
+          color: "#89E3A8",
+        };
+        setColors((previousColors) => [...previousColors, "#89E3A8"]);
+        tempResult.push(obj);
       }
     });
     setCovidResult(tempResult);
   }, []);
+  useEffect(() => {
+    console.log(colors);
+  }, [colors]);
   return (
     <div className="new-test-results-container">
       <Container maxWidth="lg">
@@ -73,14 +77,13 @@ export default function NewTestResults({ result }) {
                 paddingAngle={0}
                 dataKey="confidence"
                 label
-                color="#000000"
               >
-                {/* {data.map((entry, index) => (
+                {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
+                    fill={colors[index % colors.length]}
                   />
-                ))} */}
+                ))}
               </Pie>
             </PieChart>
 
