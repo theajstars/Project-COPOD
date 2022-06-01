@@ -230,7 +230,7 @@ export default function TakeTest() {
         changeProcessingText(4);
         setShowResults(true);
         setTestModal(false);
-      }, 3600);
+      }, 4400);
     }
   }, [testModal]);
 
