@@ -17,25 +17,25 @@ export default function NewTestResults({ result, testObject }) {
       console.log("User is not logged in!");
     } else {
       //Token exists so check if token is valid
-      axios.get(`${baseURL}/isUserAuth`).then((res) => {
-        if (!res.data.auth) {
-          //User is not authenticated
-          // setLogout(true)
-        }
-      });
+      axios
+        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+        .then((res) => {
+          if (!res.data.auth) {
+            //User is not authenticated
+            // setLogout(true)
+          }
+        });
     }
   }, []);
+  const data = [
+    { name: "Group A", value: 400 },
+    { name: "Group B", value: 300 },
+  ];
   const [verdictValue, setVerdictValue] = useState("Negative");
   const [userVerdict, setUserVerdict] = useState(null);
   const [covidResult, setCovidResult] = useState([]);
   const [colors, setColors] = useState([]);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  const data = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-  ];
-  // const COLORS = ["#89E3A8", "#F15757"];
 
   const handleUserVerdictChange = (e) => {
     setUserVerdict(e.target.value);
@@ -109,6 +109,8 @@ export default function NewTestResults({ result, testObject }) {
       })
       .then((res) => {
         console.log(res);
+        //Redirect user to dashboard
+        window.location.href = "/dashboard";
       });
   };
   return (

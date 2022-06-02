@@ -73,12 +73,14 @@ export default function TakeTest() {
       console.log("User is not logged in!");
     } else {
       //Token exists so check if token is valid
-      axios.get(`${baseURL}/isUserAuth`).then((res) => {
-        if (!res.data.auth) {
-          //User is not authenticated
-          // setLogout(true)
-        }
-      });
+      axios
+        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+        .then((res) => {
+          if (!res.data.auth) {
+            //User is not authenticated
+            // setLogout(true)
+          }
+        });
     }
   }, []);
   const [countriesArray, setCountriesArray] = useState(countries);

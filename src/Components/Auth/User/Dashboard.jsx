@@ -17,21 +17,26 @@ export default function Dashboard() {
       console.log("User is not logged in!");
     } else {
       //Token exists so check if token is valid
-      axios.get(`${baseURL}/isUserAuth`).then((res) => {
-        if (!res.data.auth) {
-          //User is not authenticated
-          // setLogout(true)
-          console.log("Authentication failed");
-          console.log(res);
-        } else {
-          //User is authenticated so fetch recent tests from DB
-          axios
-            .get("/test/all", { headers: { "x-access-token": token } })
-            .then((res) => {
-              console.log(res);
-            });
-        }
-      });
+      axios
+        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+        .then((res) => {
+          if (!res.data.auth) {
+            //User is not authenticated
+            // setLogout(true)
+            console.log("Authentication failed");
+            console.log(res);
+          } else {
+            //User is authenticated so fetch recent tests from DB
+            axios
+              .get(`${baseURL}/test/all`, {
+                headers: { "x-access-token": token },
+              })
+              .then((res) => {
+                console.log(res.data);
+                setTestHistory(res.data.userTests);
+              });
+          }
+        });
     }
   }, []);
   return (
@@ -68,7 +73,118 @@ export default function Dashboard() {
               justifyContent="center"
               alignContent="center"
             >
-              <Grid item xs={6} sm={4} md={3} lg={3}>
+              {testHistory.map((test) => {
+                function getTestDay(date) {
+                  const d = new Date(date);
+                  console.log(d);
+                  const days = [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ];
+                  const day = days[d.getDay()];
+                  console.log(day);
+                  return day;
+                }
+                function getTestDate(date) {
+                  const d = new Date(date);
+                  const months = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                  ];
+                  const month = months[d.getMonth()];
+                  const dateNum = d.getDate();
+                  const year = d.getFullYear();
+
+                  return `${month} ${dateNum}, ${year}`;
+                }
+                function getTestScore(testResult, verdict) {
+                  var currentScore;
+                  testResult.map((res) => {
+                    if (res.label === verdict) {
+                      currentScore = res.confidence;
+                    }
+                  });
+                  return currentScore;
+                }
+                if (test.verdict === "negative") {
+                  //Negative test result so user has no COVID
+                  return (
+                    <Grid item xs={6} sm={4} md={3} lg={3}>
+                      <div className="test-history-positive-container test-history-container flex-column source-sans">
+                        <span className="test-history-date-container flex-column">
+                          <span className="test-history-day">
+                            {getTestDay(test.testDate)}
+                          </span>
+                          <span className="test-history-date">
+                            {getTestDate(test.testDate)}
+                          </span>
+                        </span>
+                        <span className="test-history-value-container flex-row">
+                          <span className="jakarta test-history-value text-dark-green">
+                            {getTestScore(test.testResult, test.verdict)}
+                          </span>
+                          <span className="test-history-remark text-dark-green">
+                            {test.verdict}
+                          </span>
+                        </span>
+                        <Link
+                          to={`/test/${test.testID}`}
+                          className="text-darker-blue view-test-history"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </Grid>
+                  );
+                } else {
+                  //Positive test result so user HAS COVID
+
+                  return (
+                    <Grid item xs={6} sm={4} md={3} lg={3} key={test.testID}>
+                      <div className="test-history-negative-container test-history-container flex-column source-sans">
+                        <span className="test-history-date-container flex-column">
+                          <span className="test-history-day">
+                            {getTestDay(test.testDate)}
+                          </span>
+                          <span className="test-history-date">
+                            {getTestDate(test.testDate)}
+                          </span>
+                        </span>
+                        <span className="test-history-value-container flex-row">
+                          <span className="jakarta test-history-value text-red">
+                            {getTestScore(test.testResult, test.verdict)}
+                          </span>
+                          <span className="test-history-remark text-red">
+                            {test.verdict}
+                          </span>
+                        </span>
+                        <Link
+                          to={`/test/${test.testID}`}
+                          className="text-darker-blue view-test-history"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </Grid>
+                  );
+                }
+              })}
+              {/* <Grid item xs={6} sm={4} md={3} lg={3}>
                 <div className="test-history-positive-container test-history-container flex-column source-sans">
                   <span className="test-history-date-container flex-column">
                     <span className="test-history-day">Friday</span>
@@ -112,7 +228,7 @@ export default function Dashboard() {
                     View Details
                   </Link>
                 </div>
-              </Grid>
+              </Grid> */}
             </Grid>
           )}
         </div>
