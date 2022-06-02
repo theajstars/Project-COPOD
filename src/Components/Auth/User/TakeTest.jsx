@@ -23,6 +23,8 @@ import { countries } from "../../../Assets/JSON/JsonExports";
 
 import ModalBlur from "../../ModalBlur";
 import NewTestResults from "./NewTestResults";
+import { baseURL } from "../../../App";
+import axios from "axios";
 
 // Function to send notification
 const openNotificationWithIcon = (type, title, description) => {
@@ -69,6 +71,14 @@ export default function TakeTest() {
     if (!token) {
       // setLogout(true);
       console.log("User is not logged in!");
+    } else {
+      //Token exists so check if token is valid
+      axios.get(`${baseURL}/isUserAuth`).then((res) => {
+        if (!res.data.auth) {
+          //User is not authenticated
+          // setLogout(true)
+        }
+      });
     }
   }, []);
   const [countriesArray, setCountriesArray] = useState(countries);

@@ -3,9 +3,11 @@ import { Container, Grid } from "@mui/material";
 import SideNav from "./SideNav";
 import { Link, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
+import { baseURL } from "../../../App";
 
 export default function Dashboard() {
-  const [testHistory, setTestHistory] = useState([123231, 231321]);
+  const [testHistory, setTestHistory] = useState([]);
   const token = Cookies.get("ud");
   const [logout, setLogout] = useState(false);
   //Check if user is signed in
@@ -13,6 +15,23 @@ export default function Dashboard() {
     if (!token) {
       // setLogout(true);
       console.log("User is not logged in!");
+    } else {
+      //Token exists so check if token is valid
+      axios.get(`${baseURL}/isUserAuth`).then((res) => {
+        if (!res.data.auth) {
+          //User is not authenticated
+          // setLogout(true)
+          console.log("Authentication failed");
+          console.log(res);
+        } else {
+          //User is authenticated so fetch recent tests from DB
+          axios
+            .get("/test/all", { headers: { "x-access-token": token } })
+            .then((res) => {
+              console.log(res);
+            });
+        }
+      });
     }
   }, []);
   return (
