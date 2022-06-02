@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Navigate } from "react-router-dom";
 import { Radio, message } from "antd";
 import { baseURL } from "../../../App";
 
 export default function NewTestResults({ result, testObject }) {
   const token = Cookies.get("ud");
+  const [logout, setLogout] = useState(false);
+
   const [verdictValue, setVerdictValue] = useState("Negative");
   const [userVerdict, setUserVerdict] = useState("negative");
   const [covidResult, setCovidResult] = useState([]);
@@ -45,7 +48,12 @@ export default function NewTestResults({ result, testObject }) {
   useEffect(() => {
     console.log("User test object: ", testObject);
   }, [testObject]);
+
   useEffect(() => {
+    if (!token) {
+      // setLogout(true);
+      console.log("User is not logged in!");
+    }
     const tempResult = [];
     result.map((res) => {
       if (res.label === "positive") {
@@ -93,6 +101,8 @@ export default function NewTestResults({ result, testObject }) {
   };
   return (
     <div className="new-test-results-container">
+      {logout && <Navigate to="/auth" />}
+
       <Container maxWidth="lg">
         <center>
           <span className="text-darker-blue cabin test-result-head">

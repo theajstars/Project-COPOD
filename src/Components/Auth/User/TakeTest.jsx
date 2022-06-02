@@ -67,7 +67,8 @@ export default function TakeTest() {
   //Check if user is signed in
   useEffect(() => {
     if (!token) {
-      setLogout(true);
+      // setLogout(true);
+      console.log("User is not logged in!");
     }
   }, []);
   const [countriesArray, setCountriesArray] = useState(countries);

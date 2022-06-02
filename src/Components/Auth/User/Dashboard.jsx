@@ -12,6 +12,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!token) {
       // setLogout(true);
+      console.log("User is not logged in!");
     }
   }, []);
   return (
