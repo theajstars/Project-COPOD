@@ -13,7 +13,10 @@ export default function Test() {
   const testID = useParams().test_id;
   const token = Cookies.get("ud");
   const [logout, setLogout] = useState(false);
+  const [noTest, setNoTest] = useState(false);
   const [userCovidResult, setUserCovidResult] = useState([]);
+  const [userVerdict, setUserVerdict] = useState(null);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [userResult, setUserResult] = useState({});
   const [colors, setColors] = useState([]);
 
@@ -22,6 +25,12 @@ export default function Test() {
       "This is the result of an actual test carried out in a medical center or with a PCR kit",
       10
     );
+  };
+  const showUserNotUpdatedTest = () => {
+    message.error("Please set a verdict for the test first!", 10);
+  };
+  const handleUserVerdictChange = (e) => {
+    setUserVerdict(e.target.value);
   };
   useEffect(() => {
     //Check if user is authenticated
@@ -49,6 +58,11 @@ export default function Test() {
               .then((res) => {
                 console.log(res);
                 if (res.data.success) {
+                  if (res.data.userTestResult === null) {
+                    //Test does not exist or user has no permission to access test
+                    // window.location.href = "/dashboard";
+                    setNoTest(true);
+                  }
                   setUserResult(res.data.userTestResult);
                   setUserCovidResult(res.data.userTestResult.testResult);
                   res.data.userTestResult.testResult.map((testItem) => {
@@ -76,11 +90,61 @@ export default function Test() {
     //Fetch test data from database
 
     console.log("Hello world!");
+    document.title = "Test Result - COPOD";
   }, []);
+  const updateTest = () => {
+    //Check if user has actually updated the test
+    // if (userVerdict !== "positive" || userVerdict !== "negative") {
+    if (!userVerdict) {
+      showUserNotUpdatedTest();
+    } else {
+      const data = {
+        testID,
+        action: "update",
+        content: { userVerdict },
+      };
+      axios
+        .post(`${baseURL}/test/modify`, data, {
+          headers: {
+            "x-access-token": token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          message.success("Test updated successfully!");
+          //Redirect user to dashboard
+          // window.location.href = "/dashboard";
+          // setNoTest(true);
+        });
+    }
+  };
+  const deleteTest = () => {
+    const data = {
+      testID,
+      action: "delete",
+      content: null,
+    };
+    axios
+      .post(`${baseURL}/test/modify`, data, {
+        headers: {
+          "x-access-token": token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.success) {
+          //Deleting test was successful
+          // window.location.href = "/dashboard";
+          setNoTest(true);
+        }
+      });
+  };
   return (
     <>
       {logout && <Navigate to="/auth" />}
       <div className="new-test-results-container">
+        {noTest && <Navigate to="/dashboard" />}
+
         <Container maxWidth="lg">
           <center>
             <span className="text-darker-blue cabin test-result-head">
@@ -130,24 +194,55 @@ export default function Test() {
               </div>
               <br />
 
-              <div className="confirm-result-head flex-row">
-                <p className="cabin">Confirm test result</p>
-                <span
-                  className="confirm-result-icon flex-row"
-                  onClick={showVerdictInformation}
+              {userResult.userVerdict == undefined && (
+                <>
+                  <div className="confirm-result-head flex-row">
+                    <p className="cabin">Confirm test result</p>
+                    <span
+                      className="confirm-result-icon flex-row"
+                      onClick={showVerdictInformation}
+                    >
+                      <i className="fas fa-info"></i>
+                    </span>
+                  </div>
+                  <br />
+                  <Radio.Group
+                    onChange={handleUserVerdictChange}
+                    value={userVerdict}
+                  >
+                    <Radio value={"negative"}>Negative</Radio>
+                    <Radio value={"positive"}>Positive</Radio>
+                  </Radio.Group>
+                  <Button onClick={() => setUserVerdict("")}>Clear</Button>
+                </>
+              )}
+              <div className="flex-row test-btn-row">
+                <button
+                  className={`test-segment-action cabin ${
+                    userResult.userVerdict != undefined ? "button-disabled" : ""
+                  }`}
+                  onClick={updateTest}
+                  disabled={userResult.userVerdict != undefined ? true : false}
                 >
-                  <i className="fas fa-info"></i>
-                </span>
+                  Update test
+                </button>
+                <button
+                  className="test-segment-action cabin delete-test-btn"
+                  onClick={() => setDeleteModalVisible(true)}
+                >
+                  Delete test
+                </button>
+                <Modal
+                  visible={isDeleteModalVisible}
+                  onOk={deleteTest}
+                  // onCancel={handleDeleteCancel}
+                  centered
+                >
+                  <h3 className="cabin">
+                    Are you sure you want to delete this test?
+                  </h3>
+                </Modal>
               </div>
-              {/* <br /> */}
-              {/* <Radio.Group
-                onChange={handleUserVerdictChange}
-                value={userVerdict}
-              >
-                <Radio value={"negative"}>Negative</Radio>
-                <Radio value={"positive"}>Positive</Radio>
-              </Radio.Group>
-              <Button onClick={() => setUserVerdict("")}>Clear</Button> */}
             </div>
           </center>
         </Container>

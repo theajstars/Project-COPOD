@@ -34,3 +34,7 @@ a {
 .opaque {
   opacity: 0.6;
 }
+.button-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

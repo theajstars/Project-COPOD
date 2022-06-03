@@ -38,6 +38,7 @@ export default function Dashboard() {
           }
         });
     }
+    document.title = "Dashboard - COPOD";
   }, []);
   return (
     <Container maxWidth="lg">
