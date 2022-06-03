@@ -36,6 +36,7 @@ export default function Test() {
     //Check if user is authenticated
     if (!token) {
       //Token does not exist
+      setLogout(true);
     } else {
       //Token exists so check if it is valid
       axios
@@ -45,6 +46,7 @@ export default function Test() {
         .then((res) => {
           if (!res.data.auth) {
             //Token is invalid
+            setLogout(true);
           } else {
             //User is authenticated
             axios

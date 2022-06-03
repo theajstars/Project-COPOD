@@ -13,7 +13,7 @@ export default function Dashboard() {
   //Check if user is signed in
   useEffect(() => {
     if (!token) {
-      // setLogout(true);
+      setLogout(true);
       console.log("User is not logged in!");
     } else {
       //Token exists so check if token is valid
@@ -21,8 +21,8 @@ export default function Dashboard() {
         .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
         .then((res) => {
           if (!res.data.auth) {
-            //User is not authenticated
-            // setLogout(true)
+            //Token is not valid
+            setLogout(true);
             console.log("Authentication failed");
             console.log(res);
           } else {
