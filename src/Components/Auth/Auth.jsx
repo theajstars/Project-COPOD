@@ -11,7 +11,7 @@ export function validateEmail(email) {
 }
 
 export default function Auth() {
-  const [visibleComponent, setVisibleComponent] = useState("register");
+  const [visibleComponent, setVisibleComponent] = useState("login");
   const handleComponentSwitch = (data) => {
     setVisibleComponent(data);
   };

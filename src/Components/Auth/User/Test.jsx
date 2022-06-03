@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { Container } from "@mui/material";
 
 import { baseURL } from "../../../App";
@@ -10,6 +10,7 @@ import { Radio, message, Modal, Button } from "antd";
 import { PieChart, Pie, Cell } from "recharts";
 
 export default function Test() {
+  let navigate = useNavigate();
   const testID = useParams().test_id;
   const token = Cookies.get("ud");
   const [logout, setLogout] = useState(false);
@@ -62,7 +63,6 @@ export default function Test() {
                 if (res.data.success) {
                   if (res.data.userTestResult === null) {
                     //Test does not exist or user has no permission to access test
-                    // window.location.href = "/dashboard";
                     setNoTest(true);
                   }
                   setUserResult(res.data.userTestResult);
@@ -115,8 +115,7 @@ export default function Test() {
           console.log(res);
           message.success("Test updated successfully!");
           //Redirect user to dashboard
-          // window.location.href = "/dashboard";
-          // setNoTest(true);
+          navigate(`/test/${testID}`);
         });
     }
   };
@@ -136,7 +135,6 @@ export default function Test() {
         console.log(res);
         if (res.data.success) {
           //Deleting test was successful
-          // window.location.href = "/dashboard";
           setNoTest(true);
         }
       });

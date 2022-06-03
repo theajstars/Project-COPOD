@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Logo from "../../../Assets/IMG/Logo.svg";
+import Cookies from "js-cookie";
 export default function SideNav() {
   const [isMenuShowing, setMenuShowing] = useState(false);
+  const [navigateToAuth, setNavigateToAuth] = useState(false);
   return (
     <>
       <Link className="home-icon" to="/">
@@ -30,11 +32,20 @@ export default function SideNav() {
           <Link to="/dashboard" className="nav-item text-gray source-sans">
             Contact Developer
           </Link>
-          <Link to="/dashboard" className="nav-item text-gray source-sans">
+          <Link
+            to="/dashboard"
+            className="nav-item text-gray source-sans"
+            onClick={(e) => {
+              e.preventDefault();
+              Cookies.remove("ud");
+              setNavigateToAuth(true);
+            }}
+          >
             Logout
           </Link>
         </motion.div>
       </div>
+      {navigateToAuth && <Navigate to="/auth" />}
     </>
   );
 }

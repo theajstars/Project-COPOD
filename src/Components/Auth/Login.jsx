@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
-import { useToasts } from "react-toast-notifications";
 import { baseURL } from "../../App";
 import { validateEmail } from "./Auth";
+import { message } from "antd";
 
 export default function Login({ switchComponent }) {
   useEffect(() => {
@@ -13,25 +14,17 @@ export default function Login({ switchComponent }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submittingForm, setSubmittingForm] = useState(false);
-  const { addToast, removeAllToasts } = useToasts();
+  const [navigateToDashboard, setNavigateToDashboard] = useState(false);
   const loginUser = () => {
-    removeAllToasts();
-
     // Validate Email and Name
     const emailTrue = validateEmail(email);
     if (!emailTrue) {
       //Error in email address
 
-      addToast("Please enter a valid email", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Please enter a valid email");
     }
     if (password.length < 8) {
-      addToast("Please enter your password", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Please enter your password");
     }
     if (emailTrue && password.length >= 8) {
       //If no error send form to database
@@ -47,6 +40,11 @@ export default function Login({ switchComponent }) {
           console.log(response);
           if (response.data.auth) {
             Cookies.set("ud", response.data.token);
+            setNavigateToDashboard(true);
+          } else if (response.data.userNotFound) {
+            //No account found with emai
+            message.error("Account does not exist!");
+            setSubmittingForm(false);
           }
         })
         .catch((err) => {
@@ -102,6 +100,7 @@ export default function Login({ switchComponent }) {
           </a>
         </small>
       </div>
+      {navigateToDashboard && <Navigate to="/dashboard" />}
     </>
   );
 }

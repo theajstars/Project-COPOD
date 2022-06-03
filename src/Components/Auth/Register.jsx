@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useToasts } from "react-toast-notifications";
 import { validateEmail } from "./Auth";
 import { baseURL } from "../../App";
+import { Navigate } from "react-router-dom";
+import { message } from "antd";
 
 export default function Register({ switchComponent }) {
   useEffect(() => {
@@ -15,36 +16,23 @@ export default function Register({ switchComponent }) {
   const [password2, setPassword2] = useState("");
 
   const [submittingForm, setSubmittingForm] = useState(false);
-  const { addToast, removeAllToasts } = useToasts();
-  const registerUser = () => {
-    removeAllToasts();
+  const [navigateToDashboard, setNavigateToDashboard] = useState(false);
 
+  const registerUser = () => {
     //Check if password matches
     if (password.length < 8) {
-      addToast("Password must be at least 8 characters", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Password must be at least 8 characters");
     }
     if (password !== password2) {
-      addToast("Passwords do not match", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Passwords do not match");
     }
     // Validate Email and Name
     const isEmailValid = validateEmail(email);
     if (!isEmailValid) {
-      addToast("Please enter a valid email", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Please enter a valid email");
     }
     if (name.length < 4) {
-      addToast("Please enter your full name", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      message.error("Please enter your full name");
     }
 
     if (
@@ -62,15 +50,17 @@ export default function Register({ switchComponent }) {
       axios.post(`${baseURL}/user/register`, registerData).then((res) => {
         console.clear();
         console.log(res);
-        if (res.data.auth) {
+        if (res.data.success) {
           //Authentication was successful
           Cookies.set("ud", res.data.token);
+          setNavigateToDashboard(true);
+        } else if (res.data.userExists) {
+          // User already exists with email
+          message.error("User already exists!");
         } else {
-          addToast("An error occured!", {
-            appearance: "error",
-            autoDismiss: true,
-          });
+          message.error("Oops! An error occurred!");
         }
+
         setSubmittingForm(false);
       });
       console.log("No errors found");
@@ -143,6 +133,7 @@ export default function Register({ switchComponent }) {
           </a>
         </small>
       </div>
+      {navigateToDashboard && <Navigate to="/dashboard" />}
     </>
   );
 }
