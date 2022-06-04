@@ -119,7 +119,7 @@ export default function App() {
               </div>
               <div className="copod-property flex-column bg-white">
                 <div className="copod-property-top text-darker-blue source-sans">
-                  2500+
+                  1M+
                 </div>
                 <div className="copod-property-bottom cabin text-gray">
                   Recorded COVID Data
@@ -134,11 +134,12 @@ export default function App() {
               <div className="copod-about-right flex-column">
                 <div className="copod-about-text cabin">
                   Built on Ml5.JS, COPOD was trained and tested using public
-                  data from the Pabna Sadar Hospital in Bangladesh. Data
-                  included 2,575 patient symptoms. Using ML5’s Neural Network
-                  developing features, I built COPODs model which has shown a
-                  95% success rate at predicting if a user is positive with
-                  COVID 19 by collecting only minimal data
+                  data from released by the Israeli Ministry of Health in
+                  Israel. Data contained the records of <code>1,048,576</code>{" "}
+                  patient symptoms. Using ML5’s Neural Network developing
+                  features, I built COPODs model which has shown a 95% success
+                  rate at predicting if a user is positive with COVID 19 by
+                  collecting only minimal data
                 </div>
                 <Link
                   to="/new"
