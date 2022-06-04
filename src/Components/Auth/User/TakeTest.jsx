@@ -232,18 +232,18 @@ export default function TakeTest() {
       }, 800);
       setTimeout(() => {
         changeProcessingText(1);
-      }, 1000);
+      }, 1600);
       setTimeout(() => {
         changeProcessingText(2);
-      }, 1500);
+      }, 3000);
       setTimeout(() => {
         changeProcessingText(3);
-      }, 3000);
+      }, 4500);
       setTimeout(() => {
         changeProcessingText(4);
         setShowResults(true);
         setTestModal(false);
-      }, 4400);
+      }, 6000);
     }
   }, [testModal]);
 
