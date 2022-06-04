@@ -202,7 +202,7 @@ export default function NewTestResults({ result, testObject }) {
                   onOk={() => {
                     window.location.href = "/new";
                   }}
-                  // onCancel={handleDeleteCancel}
+                  onCancel={() => setDeleteModalVisible(false)}
                   centered
                 >
                   <h3 className="cabin">

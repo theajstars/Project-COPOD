@@ -235,7 +235,7 @@ export default function Test() {
                 <Modal
                   visible={isDeleteModalVisible}
                   onOk={deleteTest}
-                  // onCancel={handleDeleteCancel}
+                  onCancel={() => setDeleteModalVisible(false)}
                   centered
                 >
                   <h3 className="cabin">
