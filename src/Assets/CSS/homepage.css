@@ -1,3 +1,9 @@
+.home-auth {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 17px;
+}
 .home-jumbo {
   align-items: center;
   justify-content: space-between;

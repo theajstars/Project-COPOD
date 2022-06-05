@@ -34,10 +34,12 @@
 }
 .nav-item {
   height: 45px;
-  width: 160px;
   display: flex;
   align-items: center;
   font-size: 15px;
+  position: absolute;
+  top: 40px;
+  right: 40px;
 }
 .nav-item:hover {
   color: #1684eb;

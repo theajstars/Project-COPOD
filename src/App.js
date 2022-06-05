@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as THREE from "three";
 import { Container } from "@mui/material";
+import { message } from "antd";
 import "./Assets/CSS/All.css";
 import EarthImage from "./Assets/IMG/earth5.jpg";
 import FlowDiagram from "./Assets/IMG/Home_Images/Flow.svg";
@@ -12,14 +13,49 @@ import Avatar2 from "./Assets/IMG/Avatars/avatar2.jpg";
 import Avatar3 from "./Assets/IMG/Avatars/avatar3.jpg";
 import Avatar4 from "./Assets/IMG/Avatars/avatar4.jpg";
 import DeveloperImage from "./Assets/IMG/devimage.svg";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 export default function App() {
+  const [auth, setAuth] = useState(false);
   const [numberOfSlides, updateNumberOfSlides] = useState(3);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [submittingForm, setSubmittingForm] = useState(false);
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [messageBody, setMessageBody] = useState("");
+
+  //Send message to the developer
+  const sendMessage = () => {
+    function validateEmail(email) {
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+    if (validateEmail(email)) {
+      message.error("Please enter a valid email address");
+    } else if (name.length < 4) {
+      message.error("Please enter a valid name");
+    } else if (messageBody.length === 0) {
+      message.error("You must enter a message!");
+    }
+    if (validateEmail(email) && name.length >= 4 && messageBody.length !== 0) {
+      axios
+        .post(`${baseURL}/developer/send`, { name, email, messageBody })
+        .then((res) => {
+          console.log(res);
+          if (res.data.success) {
+            //Message successfully sent
+            message.success("Your message has been sent!");
+          } else {
+            message.error("Your message could not be sent");
+          }
+        });
+    }
+  };
   //Initialize Keen Slider
   const [sliderRef, slider] = useKeenSlider({
     initial: 0,
@@ -46,6 +82,27 @@ export default function App() {
       updateNumberOfSlides(2);
     } else if (window.innerWidth <= 600) {
       updateNumberOfSlides(1);
+    }
+
+    //Check if user is logged in
+    const token = Cookies.get("ud");
+    if (!token) {
+      //Token is not found
+      setAuth(false);
+    } else {
+      //Token is found so check if it is valid
+      axios
+        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+        .then((res) => {
+          console.log(res);
+          if (res.data.auth) {
+            //User is authenticated
+            setAuth(true);
+          } else {
+            //User is not authenticated
+            setAuth(false);
+          }
+        });
     }
   }, []);
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -77,6 +134,17 @@ export default function App() {
     <>
       <div className="home-container">
         <Container maxWidth="lg">
+          <div className="home-auth cabin">
+            {auth ? (
+              <Link to="/dashboard">Dashboard</Link>
+            ) : (
+              <>
+                <Link to="/auth">Login</Link>
+              </>
+            )}
+          </div>
+          <br />
+          <br />
           <div className="flex-row home-jumbo">
             <div className="flex-column">
               <span className="home-jumbo-text cabin">
@@ -217,18 +285,33 @@ export default function App() {
                   className="auth-input auth-input-full source-sans text-gray"
                   placeholder="Name"
                   spellCheck="false"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                 ></input>
                 <input
                   className="auth-input auth-input-full source-sans text-gray"
                   placeholder="Email"
                   spellCheck="false"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 ></input>
                 <textarea
                   className="auth-input auth-input-full source-sans text-gray contact-message"
                   placeholder="Message"
                   spellCheck="false"
+                  value={messageBody}
+                  onChange={(e) => {
+                    setMessageBody(e.target.value);
+                  }}
                 />
-                <button className="auth-btn bg-dark-blue text-white source-sans">
+                <button
+                  className="auth-btn bg-dark-blue text-white source-sans"
+                  onClick={sendMessage}
+                >
                   Submit Message
                   {submittingForm && (
                     <>
@@ -248,6 +331,6 @@ export default function App() {
     </>
   );
 }
-const baseURL = "https://copod-api.herokuapp.com";
-// const baseURL = "http://127.0.0.1:8080";
+// const baseURL = "https://copod-api.herokuapp.com";
+const baseURL = "http://127.0.0.1:8080";
 export { baseURL };
