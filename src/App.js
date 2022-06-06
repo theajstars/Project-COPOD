@@ -35,7 +35,7 @@ export default function App() {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     }
-    if (validateEmail(email)) {
+    if (!validateEmail(email)) {
       message.error("Please enter a valid email address");
     } else if (name.length < 4) {
       message.error("Please enter a valid name");
