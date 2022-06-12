@@ -13,7 +13,7 @@ import {
   Space,
   message,
   Modal,
-  InputNumber,
+  DatePicker,
   Row,
   Col,
 } from "antd";
@@ -68,20 +68,20 @@ export default function TakeTest() {
   const [logout, setLogout] = useState(false);
   //Check if user is signed in
   useEffect(() => {
-    if (!token) {
-      setLogout(true);
-      console.log("User is not logged in!");
-    } else {
-      //Token exists so check if token is valid
-      axios
-        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
-        .then((res) => {
-          if (!res.data.auth) {
-            //Token is not valid so logout user
-            setLogout(true);
-          }
-        });
-    }
+    // if (!token) {
+    //   setLogout(true);
+    //   console.log("User is not logged in!");
+    // } else {
+    //   //Token exists so check if token is valid
+    //   axios
+    //     .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+    //     .then((res) => {
+    //       if (!res.data.auth) {
+    //         //Token is not valid so logout user
+    //         setLogout(true);
+    //       }
+    //     });
+    // }
   }, []);
   const [countriesArray, setCountriesArray] = useState(countries);
   const [showingScreen, setShowingScreen] = useState(1);
@@ -102,9 +102,17 @@ export default function TakeTest() {
   const [headAche, setHeadache] = useState(false);
   const [breathingDiff, setBreathingDiff] = useState(false);
 
+  const [medicalCondition, setMedicalCondition] = useState(4);
   const [breathingDiffValue, setBreathingDiffValue] = useState(false);
   const [isBreathingDiffValueDisabled, setBreathingDiffValueDisabled] =
     useState(true);
+
+  const [isVaccinated, setVaccinated] = useState(false);
+  const [vaccineType, setVaccineType] = useState(1);
+  const [vaccinationDate, setVaccinationDate] = useState("");
+  useEffect(() => {
+    console.log(isVaccinated);
+  }, [isVaccinated]);
 
   const [testObject, setTestObject] = useState({});
 
@@ -466,26 +474,21 @@ export default function TakeTest() {
                 <span className="test-segment-answer-option cabin">Yes</span>
               </div>
             </div>
-            <div
-              className={`test-segment-question flex-column ${
-                isBodyPainValueDisabled ? "opaque" : ""
-              }`}
-            >
+            <div className="test-segment-question flex-column">
               <span className="test-segment-question-text">
-                Please rate the pain from 1 - 3
+                Do you have any of the following diseases? <br />
               </span>
               <br />
               <br />
-              <div className="slider-container">
-                <Slider
-                  disabled={isBodyPainValueDisabled}
-                  marks={PainScaleMarks}
-                  step={null}
-                  onChange={(e) => {
-                    setBodyPainValue(e);
-                  }}
-                />
-              </div>
+              <Radio.Group
+                onChange={(e) => setMedicalCondition(e.target.value)}
+                value={medicalCondition}
+              >
+                <Radio.Button value={1}>High Blood Pressure</Radio.Button>
+                <Radio.Button value={2}>Heart diseases</Radio.Button>
+                <Radio.Button value={3}>Diabetes</Radio.Button>
+                <Radio.Button value={4}>None</Radio.Button>
+              </Radio.Group>
             </div>
             <div className="test-segment-question flex-column">
               <span className="test-segment-question-text">
@@ -528,6 +531,91 @@ export default function TakeTest() {
             animate={{
               opacity: showingScreen === 4 ? 1 : 0,
               display: showingScreen === 4 ? "flex" : "none",
+            }}
+          >
+            <CancelTestButton />
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Have you been vaccinated? <br />
+                <br />
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setVaccinated(e);
+                  }}
+                  checked={isVaccinated}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div
+              className={`test-segment-question flex-column ${
+                !isVaccinated ? "opaque" : ""
+              }`}
+            >
+              <span className="test-segment-question-text">
+                When were you vaccinated? <br />
+                <br />
+              </span>
+              <br />
+              <br />
+
+              <DatePicker
+                disabled={!isVaccinated}
+                onChange={(date, dateString) => {
+                  setVaccinationDate(dateString);
+                }}
+              />
+            </div>
+            <div
+              className={`test-segment-question flex-column ${
+                !isVaccinated ? "opaque" : ""
+              }`}
+            >
+              <span className="test-segment-question-text">
+                What kind of COVID vaccine did you get? <br />
+                <br />
+              </span>
+              <br />
+              <br />
+              <Radio.Group
+                disabled={!isVaccinated}
+                onChange={(e) => setVaccineType(e.target.value)}
+                value={vaccineType}
+              >
+                <Radio.Button value={1}>Single Dose</Radio.Button>
+                <Radio.Button value={2}>Two Dose</Radio.Button>
+              </Radio.Group>
+            </div>
+            <div className="test-segment-actions flex-row">
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen + 1)}
+              >
+                Continue
+              </button>
+            </div>
+          </motion.div>
+          <motion.div
+            className="test-segment-container bg-white flex-column"
+            initial={{
+              opacity: 0,
+              display: "flex",
+            }}
+            animate={{
+              opacity: showingScreen === 5 ? 1 : 0,
+              display: showingScreen === 5 ? "flex" : "none",
             }}
           >
             <CancelTestButton />
