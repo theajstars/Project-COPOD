@@ -161,7 +161,7 @@ export default function NewTestResults({ result, testObject }) {
                       : "positive-verdict"
                   }`}
                 >
-                  {verdictValue}
+                  {verdictValue.toUpperCase()}
                 </span>
               </div>
               <br />

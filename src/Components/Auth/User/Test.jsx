@@ -189,7 +189,7 @@ export default function Test() {
                       : "positive-verdict"
                   }`}
                 >
-                  {userResult.verdict}
+                  {userResult.verdict.toUpperCase()}
                 </span>
               </div>
               <br />

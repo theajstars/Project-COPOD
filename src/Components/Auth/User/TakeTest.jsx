@@ -450,7 +450,7 @@ export default function TakeTest() {
               <span className="test-segment-question-text">
                 Do you have body pains? <br />
                 <br />
-                e.g Neck, Back, Waist, Torso.
+                e.g Neck, Muscle, Waist aches.
               </span>
               <br />
               <br />

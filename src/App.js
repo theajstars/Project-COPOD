@@ -12,7 +12,7 @@ import Avatar1 from "./Assets/IMG/Avatars/avatar1.jpg";
 import Avatar2 from "./Assets/IMG/Avatars/avatar2.jpg";
 import Avatar3 from "./Assets/IMG/Avatars/avatar3.jpg";
 import Avatar4 from "./Assets/IMG/Avatars/avatar4.jpg";
-import DeveloperImage from "./Assets/IMG/devimage.svg";
+import DeveloperImage from "./Assets/IMG/devimage.jpg";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -56,15 +56,11 @@ export default function App() {
         });
     }
   };
-  //Initialize Keen Slider
-  const [sliderRef, slider] = useKeenSlider({
-    initial: 0,
-    slidesPerView: numberOfSlides,
-    mode: "free",
-    spacing: 15,
-    autoAdjustSlidesPerView: 2,
-    slideChanged(s) {
-      setCurrentSlide(s.details().relativeSlide);
+
+  const [sliderRef] = useKeenSlider({
+    slides: {
+      perView: numberOfSlides,
+      spacing: 45,
     },
   });
   const globeRef = useRef();
@@ -152,7 +148,7 @@ export default function App() {
               </span>
               <Link
                 to="/new"
-                className="get-tested-now-btn text-darker-blue cabin bg-white"
+                className="get-tested-now-btn text-darker-blue cabin"
               >
                 Get Tested now
               </Link>
@@ -169,7 +165,7 @@ export default function App() {
           </div>
           <Container maxWidth="md">
             <div className="copod-properties flex-row">
-              <div className="copod-property flex-column bg-white">
+              <div className="copod-property flex-column">
                 <div className="copod-property-top text-darker-blue source-sans">
                   98%
                 </div>
@@ -177,7 +173,7 @@ export default function App() {
                   Model Accuracy
                 </div>
               </div>
-              <div className="copod-property flex-column bg-white">
+              <div className="copod-property flex-column">
                 <div className="copod-property-top text-darker-blue source-sans">
                   <img src={ML5} />
                 </div>
@@ -185,7 +181,7 @@ export default function App() {
                   Powered by ML5.JS
                 </div>
               </div>
-              <div className="copod-property flex-column bg-white">
+              <div className="copod-property flex-column">
                 <div className="copod-property-top text-darker-blue source-sans">
                   1M+
                 </div>
@@ -211,7 +207,7 @@ export default function App() {
                 </div>
                 <Link
                   to="/new"
-                  className="get-tested-now-btn text-darker-blue cabin bg-white"
+                  className="get-tested-now-btn text-darker-blue cabin"
                 >
                   Get Tested now
                 </Link>
@@ -279,7 +275,7 @@ export default function App() {
           </center>
           <Container maxWidth="md">
             <div className="flex-row contact-developer-container">
-              <img src={DeveloperImage} alt="" />
+              <img src={DeveloperImage} className="developer-image" />
               <div className="flex-column contact-developer-form">
                 <input
                   className="auth-input auth-input-full source-sans text-gray"

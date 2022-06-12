@@ -1,3 +1,6 @@
+.home-container {
+  background: #f1f1f1;
+}
 .home-auth {
   position: absolute;
   top: 30px;
@@ -49,12 +52,10 @@
   padding: 60px 0px;
 }
 .copod-property {
-  box-shadow: 0px 0px 4px rgba(41, 71, 148, 0.37);
   height: 200px;
   width: 200px;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
 }
 .copod-property-top {
   font-weight: 600;
@@ -128,8 +129,8 @@
 }
 .contact-developer-section {
   background: url("../IMG/contact-bg-2.svg");
-  height: 500px;
-  /* width: 80%; */
+  height: fit-content;
+  padding: 40px 0px;
 }
 .contact-developer-container {
   width: 100%;
@@ -137,8 +138,9 @@
   align-items: center;
 }
 .contact-developer-container img {
-  border-radius: 50%;
-  transform: scale(0.79);
+  /* backdrop-filter: blur(100px); */
+  width: 411px;
+  height: 386px;
 }
 .contact-developer-form {
   width: 40%;
