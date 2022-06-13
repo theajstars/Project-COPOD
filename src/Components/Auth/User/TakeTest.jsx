@@ -14,8 +14,7 @@ import {
   message,
   Modal,
   DatePicker,
-  Row,
-  Col,
+  Input,
 } from "antd";
 import { motion } from "framer-motion";
 //Import countries.json for users location entry
@@ -99,6 +98,7 @@ export default function TakeTest() {
   const [isBodyPainValueDisabled, setBodyPainValueDisabled] = useState(true);
 
   const [runnyNose, setRunnyNose] = useState(false);
+  const [heartAttact, setHeartAttack] = useState(false);
   const [headAche, setHeadache] = useState(false);
   const [breathingDiff, setBreathingDiff] = useState(false);
 
@@ -110,10 +110,16 @@ export default function TakeTest() {
   const [isVaccinated, setVaccinated] = useState(false);
   const [vaccineType, setVaccineType] = useState(1);
   const [vaccinationDate, setVaccinationDate] = useState("");
-  useEffect(() => {
-    console.log(isVaccinated);
-  }, [isVaccinated]);
 
+  const [anosmia, setAnosmia] = useState(false);
+  const [lossOfTaste, setLossOfTaste] = useState(false);
+  const [fatigue, setFatigue] = useState(false);
+
+  const [appetite, setAppetite] = useState(false);
+  const [difficultSwallowing, setDifficultSwallowing] = useState(false);
+  const [sleep, setSleep] = useState(50);
+
+  const [diarrhea, setDiarrhea] = useState(false);
   const [testObject, setTestObject] = useState({});
 
   const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
@@ -492,7 +498,7 @@ export default function TakeTest() {
             </div>
             <div className="test-segment-question flex-column">
               <span className="test-segment-question-text">
-                Do you have a runny nose?
+                Have you ever had a heart attack?
               </span>
               <br />
               <br />
@@ -501,7 +507,7 @@ export default function TakeTest() {
                 <Switch
                   size="default"
                   onChange={(e) => {
-                    setRunnyNose(e);
+                    setHeartAttack(e);
                   }}
                 />
                 <span className="test-segment-answer-option cabin">Yes</span>
@@ -616,6 +622,243 @@ export default function TakeTest() {
             animate={{
               opacity: showingScreen === 5 ? 1 : 0,
               display: showingScreen === 5 ? "flex" : "none",
+            }}
+          >
+            <CancelTestButton />
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Are you experiencing loss of smell (Anosmia)?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setAnosmia(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Are you experiencing loss of taste?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setLossOfTaste(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Are you experiencing tiredness (Fatigue)?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setFatigue(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-actions flex-row">
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen + 1)}
+              >
+                Continue
+              </button>
+            </div>
+          </motion.div>
+          <motion.div
+            className="test-segment-container bg-white flex-column"
+            initial={{
+              opacity: 0,
+              display: "flex",
+            }}
+            animate={{
+              opacity: showingScreen === 6 ? 1 : 0,
+              display: showingScreen === 6 ? "flex" : "none",
+            }}
+          >
+            <CancelTestButton />
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Are you losing appetite? <br />
+                <br />
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setAppetite(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Do you have difficulty in swallowing food? <br />
+                <br />
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setDifficultSwallowing(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                How well do you sleep at night?
+              </span>
+              <br />
+              <br />
+              <div className="slider-container">
+                <Slider
+                  marks={{
+                    1: "Bad",
+                    50: "Fair",
+                    100: "Good",
+                  }}
+                  value={sleep}
+                  step={null}
+                  onChange={(e) => {
+                    setSleep(e);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="test-segment-actions flex-row">
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen + 1)}
+              >
+                Continue
+              </button>
+            </div>
+          </motion.div>
+          <motion.div
+            className="test-segment-container bg-white flex-column"
+            initial={{
+              opacity: 0,
+              display: "flex",
+            }}
+            animate={{
+              opacity: showingScreen === 7 ? 1 : 0,
+              display: showingScreen === 7 ? "flex" : "none",
+            }}
+          >
+            <CancelTestButton />
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Do you have a runny nose?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setRunnyNose(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                Are you experiencing Diarrhea?
+              </span>
+              <br />
+              <br />
+              <div className="test-segment-answer-options flex-row">
+                <span className="test-segment-answer-option cabin">No</span>
+                <Switch
+                  size="default"
+                  onChange={(e) => {
+                    setDiarrhea(e);
+                  }}
+                />
+                <span className="test-segment-answer-option cabin">Yes</span>
+              </div>
+            </div>
+            <div className="test-segment-question flex-column">
+              <span className="test-segment-question-text">
+                How long have you been experiencing Diarrhea?
+              </span>
+              <br />
+              <br />
+              <Input
+                size="large"
+                style={{
+                  width: "20%",
+                }}
+                placeholder="Input days"
+              />
+            </div>
+            <div className="test-segment-actions flex-row">
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="test-segment-action cabin"
+                onClick={() => setShowingScreen(showingScreen + 1)}
+              >
+                Continue
+              </button>
+            </div>
+          </motion.div>
+          <motion.div
+            className="test-segment-container bg-white flex-column"
+            initial={{
+              opacity: 0,
+              display: "flex",
+            }}
+            animate={{
+              opacity: showingScreen === 8 ? 1 : 0,
+              display: showingScreen === 8 ? "flex" : "none",
             }}
           >
             <CancelTestButton />
