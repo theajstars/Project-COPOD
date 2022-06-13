@@ -10,11 +10,12 @@ import {
   Switch,
   Popconfirm,
   notification,
-  Space,
+  Checkbox,
   message,
   Modal,
   DatePicker,
   Input,
+  Button,
 } from "antd";
 import { motion } from "framer-motion";
 //Import countries.json for users location entry
@@ -67,6 +68,7 @@ export default function TakeTest() {
   const [logout, setLogout] = useState(false);
   //Check if user is signed in
   useEffect(() => {
+    document.title = "New Test - COPOD";
     // if (!token) {
     //   setLogout(true);
     //   console.log("User is not logged in!");
@@ -89,27 +91,28 @@ export default function TakeTest() {
   const [age, setAge] = useState(18);
   const [gender, setGender] = useState(1);
   const [fever, setFever] = useState(false);
-  const [feverValue, setFeverValue] = useState(37);
   const [soreThroat, setSoreThroat] = useState(false);
   const [cough, setCough] = useState(false);
 
   const [bodyPain, setBodyPain] = useState(false);
-  const [bodyPainValue, setBodyPainValue] = useState(false);
-  const [isBodyPainValueDisabled, setBodyPainValueDisabled] = useState(true);
 
   const [runnyNose, setRunnyNose] = useState(false);
-  const [heartAttact, setHeartAttack] = useState(false);
+  const [heartAttack, setHeartAttack] = useState(false);
   const [headAche, setHeadache] = useState(false);
   const [breathingDiff, setBreathingDiff] = useState(false);
 
-  const [medicalCondition, setMedicalCondition] = useState(4);
-  const [breathingDiffValue, setBreathingDiffValue] = useState(false);
+  const [medicalConditions, setMedicalConditions] = useState({
+    highBloodPressure: false,
+    heartDiseases: false,
+    diabetes: false,
+  });
+  const [breathingDiffValue, setBreathingDiffValue] = useState(1);
   const [isBreathingDiffValueDisabled, setBreathingDiffValueDisabled] =
     useState(true);
 
   const [isVaccinated, setVaccinated] = useState(false);
   const [vaccineType, setVaccineType] = useState(1);
-  const [vaccinationDate, setVaccinationDate] = useState("");
+  const [vaccinationDate, setVaccinationDate] = useState("2022-06-01");
 
   const [anosmia, setAnosmia] = useState(false);
   const [lossOfTaste, setLossOfTaste] = useState(false);
@@ -151,7 +154,7 @@ export default function TakeTest() {
   const getUserResult = () => {
     const neuralOptions = {
       task: "classification",
-      debug: true,
+      debug: false,
     };
     const nn = ml5.neuralNetwork(neuralOptions);
     nn.load("/Top_Half/model.json", () => {
@@ -171,12 +174,126 @@ export default function TakeTest() {
           console.error("An error occurred: ", error);
         } else {
           console.log(testResult);
-          setTestResults(testResult);
+          var score = 0.0;
+          const getNumberOfVaccineDays = () => {
+            const d = new Date(vaccinationDate);
+            const today = new Date(Date.now());
+            const difference = today - d;
+            const daysBetween = Math.floor(difference / 1000 / 60 / 60 / 24);
+            return daysBetween;
+          };
+          // Add bias based on other factors not in the dataset
+          if (isVaccinated) {
+            //User has been vaccinated
+            const daysSinceVaccination = getNumberOfVaccineDays();
+            if (daysSinceVaccination > 21) {
+              // Since vaccines require at least 2 - 4 weeks to become effective,
+              // any vaccine taken less than 3  weeks ago should possibly be slighly ineffective, I believe so at least!
+              score = +2.5;
+            }
+          } else {
+            score = -1;
+          }
+          if (bodyPain) {
+            score = -1;
+          }
+
+          if (
+            (runnyNose && cough) ||
+            (runnyNose && soreThroat && cough) ||
+            (soreThroat && cough)
+          ) {
+            score = -1.5;
+          }
+
+          if (heartAttack) {
+            score = -2;
+          }
+
+          if (breathingDiff) {
+            if (breathingDiffValue >= 50) {
+              score = -1;
+            } else {
+              score = -0.5;
+            }
+          }
+
+          if (diarrhea) {
+            score = -1;
+          }
+
+          const sensesRelatedCount = 0;
+          if (anosmia === true) {
+            sensesRelatedCount += 1;
+          }
+          if (lossOfTaste === true) {
+            sensesRelatedCount += 1;
+          }
+          if (fatigue === true) {
+            sensesRelatedCount += 1;
+          }
+          if (difficultSwallowing === true) {
+            sensesRelatedCount += 1;
+          }
+          if (appetite === true) {
+            sensesRelatedCount += 1;
+          }
+
+          if (sensesRelatedCount >= 3) {
+            score = -3;
+          } else if (sensesRelatedCount >= 1 && sensesRelatedCount < 3) {
+            score = -1.5;
+          }
+
+          if (sleep === 50) {
+            score = -0.3;
+          }
+          if (sleep === 100) {
+            score = -0.5;
+          }
+          if (
+            medicalConditions.highBloodPressure ||
+            medicalConditions.heartDiseases ||
+            medicalConditions.diabetes
+          ) {
+            score = +1;
+          }
+          if (heartAttack) {
+            score = +0.7;
+          }
+          console.log(score);
+          var tempResult = testResult;
+          testResult.map((res) => {
+            if (res.label === "positive" && score < 0) {
+              const thisBias = res.confidence * Math.abs(score);
+              console.log("This Bias: ", thisBias);
+              // res.confidence = thisBias + res.confidence;
+              tempResult = tempResult.filter((e) => e.label !== "positive");
+              tempResult.push({
+                positive: thisBias + res.positive,
+                label: "positive",
+                confidence: thisBias + res.positive,
+              });
+              console.log(res.confidence);
+            } else if (res.label === "negative" && score > 0) {
+              const thisBias = res.confidence * Math.abs(score);
+              console.log("This Bias: ", thisBias);
+              // res.confidence = thisBias + res.confidence;
+              tempResult = tempResult.filter((e) => e.label !== "negative");
+              tempResult.push({
+                negative: this.bias + res.negative,
+                label: "negative",
+                confidence: thisBias + res.negative,
+              });
+            }
+          });
+          console.log(tempResult);
+
+          setTestResults(tempResult);
         }
       });
     });
   };
-
   const [showResults, setShowResults] = useState(false);
   const PainScaleMarks = {
     1: 1,
@@ -474,7 +591,6 @@ export default function TakeTest() {
                   size="default"
                   onChange={(e) => {
                     setBodyPain(e);
-                    setBodyPainValueDisabled(!e);
                   }}
                 />
                 <span className="test-segment-answer-option cabin">Yes</span>
@@ -486,15 +602,55 @@ export default function TakeTest() {
               </span>
               <br />
               <br />
-              <Radio.Group
-                onChange={(e) => setMedicalCondition(e.target.value)}
-                value={medicalCondition}
-              >
-                <Radio.Button value={1}>High Blood Pressure</Radio.Button>
-                <Radio.Button value={2}>Heart diseases</Radio.Button>
-                <Radio.Button value={3}>Diabetes</Radio.Button>
-                <Radio.Button value={4}>None</Radio.Button>
-              </Radio.Group>
+              <div className="flex-row">
+                <Checkbox
+                  value={medicalConditions.highBloodPressure}
+                  checked={medicalConditions.highBloodPressure}
+                  onChange={(e) => {
+                    setMedicalConditions((medicalConditions) => ({
+                      ...medicalConditions,
+                      ...{ highBloodPressure: e.target.checked },
+                    }));
+                  }}
+                >
+                  High Blood Pressure
+                </Checkbox>
+                <Checkbox
+                  value={medicalConditions.heartDiseases}
+                  checked={medicalConditions.heartDiseases}
+                  onChange={(e) => {
+                    setMedicalConditions((medicalConditions) => ({
+                      ...medicalConditions,
+                      ...{ heartDiseases: e.target.checked },
+                    }));
+                  }}
+                >
+                  Heart Diseases
+                </Checkbox>
+                <Checkbox
+                  value={medicalConditions.diabetes}
+                  checked={medicalConditions.diabetes}
+                  onChange={(e) => {
+                    setMedicalConditions((medicalConditions) => ({
+                      ...medicalConditions,
+                      ...{ diabetes: e.target.checked },
+                    }));
+                  }}
+                >
+                  Diabetes
+                </Checkbox>
+                <Button
+                  onClick={() => {
+                    setMedicalConditions({
+                      highBloodPressure: false,
+                      heartDiseases: false,
+                      diabetes: false,
+                    });
+                  }}
+                >
+                  Clear
+                </Button>
+              </div>
             </div>
             <div className="test-segment-question flex-column">
               <span className="test-segment-question-text">
