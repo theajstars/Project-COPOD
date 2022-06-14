@@ -69,20 +69,20 @@ export default function TakeTest() {
   //Check if user is signed in
   useEffect(() => {
     document.title = "New Test - COPOD";
-    // if (!token) {
-    //   setLogout(true);
-    //   console.log("User is not logged in!");
-    // } else {
-    //   //Token exists so check if token is valid
-    //   axios
-    //     .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
-    //     .then((res) => {
-    //       if (!res.data.auth) {
-    //         //Token is not valid so logout user
-    //         setLogout(true);
-    //       }
-    //     });
-    // }
+    if (!token) {
+      setLogout(true);
+      console.log("User is not logged in!");
+    } else {
+      //Token exists so check if token is valid
+      axios
+        .get(`${baseURL}/isUserAuth`, { headers: { "x-access-token": token } })
+        .then((res) => {
+          if (!res.data.auth) {
+            //Token is not valid so logout user
+            setLogout(true);
+          }
+        });
+    }
   }, []);
   const [countriesArray, setCountriesArray] = useState(countries);
   const [showingScreen, setShowingScreen] = useState(1);
