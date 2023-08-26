@@ -2,7 +2,7 @@
   "name": "copod",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://www.copod.theajstars.com",
+  "homepage": "https://copodtwo.netlify.app",
   "dependencies": {
     "@emailjs/browser": "^3.6.2",
     "@emotion/react": "^11.9.0",
